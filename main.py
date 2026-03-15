@@ -12,15 +12,21 @@ def get_hint(sa,direction):
     else:
         return f"200以上{direction}して~遠すぎてワロタ"
 
+
 difficulty = {
     "easy":(100,20),
     "normal":(300,15),
     "hard":(500,10)
 }
 
-def play_game():
+def play_game(best_score):
+
+    print("==============")
+    print("数字当てゲーム")
+    print("==============")
+
     while True:
-        dif = input("数字当てゲーム！難易度は何にする?(hard/normal/easy):")
+        dif = input("難易度は何にする?(hard/normal/easy):")
         if dif in difficulty:
             break
         print("easy / normal / hard で入力してな!")
@@ -43,14 +49,19 @@ def play_game():
         sa=abs(kaitou-seikai)
         nokori= max_try - i - 1
 
-        if kaitou<seikai:
-            direction="でかく"
-        else:
-            direction="ちっさく"
+        direction="でかく"  if kaitou<seikai else "ちっさく"
 
         if kaitou==seikai:
+            score = i + 1
             print(f"大当たり~~~~~~~~!!今回は{i+1}回で当てれたな~~!!")
-            break
+
+            if best_score is None or score < best_score:
+                best_score = score
+                print("新記録更新やで！！")
+            
+            print(f"今回記録：{score}回")
+            print(f"最短記録：{best_score}回")
+            return best_score
 
         hint=get_hint(sa,direction)
         
@@ -60,12 +71,16 @@ def play_game():
             print(f"ざんね~~~~んww正解は{seikai}!")
 
 def main():
+
+    best_score = None
+
     while True:
-        play_game()
+
+        best_score = play_game(best_score)
+
         ans = input("もう一回遊ぶ？ (y/n): ")
         if ans == "n":
             break
-    
 
 if __name__ == "__main__":
     main()
@@ -86,23 +101,21 @@ def get_hint(sa,direction):
     else:
         return f"200以上{direction}して~遠すぎてワロタ"
 
-def difficult(dif):
-    if dif == "hard":
-        return random.randint(1,500),500
-    elif dif == "normal":
-        return random.randint(1,300),300
-    else:
-        return random.randint(1,100),100
+difficulty = {
+    "easy":(100,20),
+    "normal":(300,15),
+    "hard":(500,10)
+}
 
 def play_game():
     while True:
         dif = input("数字当てゲーム！難易度は何にする?(hard/normal/easy):")
-        if dif in ("easy","normal","hard"):
+        if dif in difficulty:
             break
         print("easy / normal / hard で入力してな!")
 
-    seikai,max_num = difficult(dif)
-    max_try=15
+    max_num,max_try = difficulty[dif]
+    seikai = random.randint(1,max_num)
 
     for i in range(max_try):
         try:
