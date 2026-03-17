@@ -10,7 +10,7 @@ def load_score():
 
 def save_score(score):
     with open("score.json","w") as f:
-        json.dump(score,f)
+        json.dump(score,f,indent = 4)
 
 def get_hint(sa,direction):
     if 1<=sa<=10:
@@ -33,6 +33,11 @@ def show_score(scores):
         else:
             print(f"{k} : {v}回")
 
+def show_history(history):
+    print("\n入力履歴")
+    for num, d in history:
+        print(f"{num} → {d}")
+
 
 difficulty = {
     "easy":(100,20),
@@ -41,6 +46,8 @@ difficulty = {
 }
 
 def play_game(best_scores):
+
+    history = []
 
     print("==============")
     print("数字当てゲーム")
@@ -70,12 +77,13 @@ def play_game(best_scores):
 
         sa=abs(kaitou-seikai)
         nokori= max_try - i - 1
-
         direction="でかく"  if kaitou<seikai else "ちっさく"
 
         if kaitou==seikai:
+            history.append((kaitou,"正解!"))
             score = i + 1
             print(f"大当たり~~~~~~~~!!今回は{score}回で当てれたな~~!!")
+            show_history(history)
 
             if best_scores[dif] is None or score < best_scores[dif]:
                 best_scores[dif] = score
@@ -86,12 +94,17 @@ def play_game(best_scores):
             print(f"最短記録：{best_scores[dif]}回")
             return best_scores
 
+        else:
+            history.append((kaitou,direction))
+
         hint=get_hint(sa,direction)
         
         if nokori>0:
             print(f"外れWWあと{nokori}回であててな～ちなみに{hint}")
+
         else:
             print(f"ざんね~~~~んww正解は{seikai}!")
+            show_history(history)
             return best_scores
 
 def main():
