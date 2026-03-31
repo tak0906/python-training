@@ -16,7 +16,7 @@ class NumberGame:
             with open("score.json","r") as f:
                 return json.load(f)
         except FileNotFoundError:
-            return {"easy":None,"normal":None,"hard":None}
+            return {"easy":[],"normal":[],"hard":[]}
 
     def save_score(self):
         with open("score.json","w") as f:
@@ -39,9 +39,12 @@ class NumberGame:
             return f"200以上{direction}して~遠すぎてワロタ"
 
     def show_score(self):
-        print("\n現在の最短記録")
-        for k,v in self.best_scores.items():
-            print(f"{k} : {'未記録' if v is None else str(v)+'回'}")
+        print("\nランキング")
+        for k, v in self.best_scores.items():
+            if v is None:
+                print(f"{k} : 未記録")
+            else:
+                print(f"{k} : {', '.join(str(x)+'回' for x in v)}")
 
     def show_history(self,history):
         print("\n入力履歴")
@@ -93,13 +96,18 @@ class NumberGame:
                 print(f"大当たり~~~~~~~~!!今回は{score}回で当てれたな~~!!")
                 self.show_history(history)
 
-                if self.best_scores[dif] is None or score < self.best_scores[dif]:
-                    self.best_scores[dif] = score
+                old_scores = self.best_scores[dif].copy()
+
+                self.best_scores[dif].append(score)
+                self.best_scores[dif].sort()
+                self.best_scores[dif] = self.best_scores[dif][:3]
+
+                if self.best_scores[dif] != old_scores:
                     print("新記録更新やで！！")
                     self.save_score()
 
                 print(f"今回記録：{score}回")
-                print(f"最短記録：{self.best_scores[dif]}回")
+                print(f"ランキング：{', '.join(str(x)+'回' for x in self.best_scores[dif])}")
                 return
         
             if nokori>0:

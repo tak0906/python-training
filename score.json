@@ -1,5 +1,7 @@
 {
-    "easy": 1,
-    "normal": 5,
-    "hard": 4
+    "easy": [
+        3
+    ],
+    "normal": [],
+    "hard": []
 }
