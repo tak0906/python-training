@@ -1,6 +1,9 @@
 {
     "easy": [
-        3
+        {
+            "name": "hanai",
+            "score": 15
+        }
     ],
     "normal": [],
     "hard": []

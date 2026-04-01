@@ -41,10 +41,12 @@ class NumberGame:
     def show_score(self):
         print("\nランキング")
         for k, v in self.best_scores.items():
-            if v is None:
-                print(f"{k} : 未記録")
+            print(f"\n【{k}】")
+            if not v:
+                print("未記録")
             else:
-                print(f"{k} : {', '.join(str(x)+'回' for x in v)}")
+                for i, record in enumerate(v, 1):
+                    print(f"{i}位 {record['name']} : {record['score']}回")
 
     def show_history(self,history):
         print("\n入力履歴")
@@ -66,6 +68,13 @@ class NumberGame:
                 break
             print("easy / normal / hard で入力してな!")
 
+        while True:
+            name = input("名前を入力してな!:").strip()
+            if name:
+                break
+            print("ちゃんと名前いれてな～")
+
+  
         max_num,max_try = self.difficulty[dif]
         seikai = random.randint(1,max_num)
 
@@ -96,18 +105,22 @@ class NumberGame:
                 print(f"大当たり~~~~~~~~!!今回は{score}回で当てれたな~~!!")
                 self.show_history(history)
 
+                new_record = {"name": name, "score": score}
                 old_scores = self.best_scores[dif].copy()
 
-                self.best_scores[dif].append(score)
-                self.best_scores[dif].sort()
+                before_len = len(self.best_scores[dif])
+
+                self.best_scores[dif].append(new_record)
+                self.best_scores[dif].sort(key=lambda x: x["score"])
                 self.best_scores[dif] = self.best_scores[dif][:3]
 
-                if self.best_scores[dif] != old_scores:
+                if new_record in self.best_scores[dif]:
                     print("新記録更新やで！！")
                     self.save_score()
 
                 print(f"今回記録：{score}回")
-                print(f"ランキング：{', '.join(str(x)+'回' for x in self.best_scores[dif])}")
+                for i, record in enumerate(self.best_scores[dif], 1):
+                    print(f"{i}位 {record['name']} : {record['score']}回")
                 return
         
             if nokori>0:
