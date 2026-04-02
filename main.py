@@ -1,5 +1,6 @@
 import random
 import json
+from datetime import datetime
 
 class NumberGame:
 
@@ -56,6 +57,12 @@ class NumberGame:
     def play_game(self):
         
         history = []
+
+        cmd = input("コマンド (Enterで開始 / rでリセット): ")
+        if cmd == "r":
+            self.best_scores = {"easy": [], "normal": [], "hard": []}
+            self.save_score()
+            print("ランキングリセットしたで！")
          
         print("==============")
         print("数字当てゲーム")
@@ -105,7 +112,7 @@ class NumberGame:
                 print(f"大当たり~~~~~~~~!!今回は{score}回で当てれたな~~!!")
                 self.show_history(history)
 
-                new_record = {"name": name, "score": score}
+                new_record = {"name": name, "score": score,"date": datetime.now().strftime("%Y-%m-%d %H:%M")}
                 old_scores = self.best_scores[dif].copy()
 
                 before_len = len(self.best_scores[dif])
@@ -119,8 +126,10 @@ class NumberGame:
                     self.save_score()
 
                 print(f"今回記録：{score}回")
+                medals = ["🥇", "🥈", "🥉"]
                 for i, record in enumerate(self.best_scores[dif], 1):
-                    print(f"{i}位 {record['name']} : {record['score']}回")
+                    mark = medals[i-1] if i <= 3 else f"{i}位"
+                    print(f"{mark} {record['name']} : {record['score']}回 ({record['date']})")
                 return
         
             if nokori>0:

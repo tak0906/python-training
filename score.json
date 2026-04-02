@@ -1,8 +1,14 @@
 {
     "easy": [
         {
+            "name": "hana",
+            "score": 3,
+            "date": "2026-04-02 23:11"
+        },
+        {
             "name": "hanai",
-            "score": 15
+            "score": 10,
+            "date": "2026-04-02 23:10"
         }
     ],
     "normal": [],
